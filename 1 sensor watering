@@ -1,0 +1,74 @@
+
+#include <Sensirion.h>
+
+//Soil Sensor Pins
+const uint8_t dataPin  =  2;
+const uint8_t clockPin =  3;
+
+//Other Pins
+int ledPin = 5;
+int motorPin = 6;
+int buttonPin = 9;
+
+//Variables
+unsigned long Timer;
+int runtime = 10; //run time for motor in seconds
+int pentime = 5; //penetration (waiting) time in seconds
+float threshold = 40; //set to moisture
+int state;
+
+//Soil Sensor Variables
+float temperature;
+float humidity;
+float dewpoint;
+
+//Create soil sensor object
+Sensirion tempSensor = Sensirion(dataPin, clockPin);
+
+void setup() 
+{
+  pinMode(motorPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  Serial.begin(9600);
+}
+
+void loop() {
+  tempSensor.measure(&temperature, &humidity, &dewpoint);
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print(" C, Humidity: ");
+  Serial.println(humidity);
+  Serial.print(" %, Dewpoint: ");
+  Serial.print(dewpoint);
+  Serial.println(" C");
+  
+
+// when trigger -> run motor -> wait -> check trigger
+  if (humidity > threshold)
+  {
+    state = HIGH;
+    digitalWrite(motorPin, state);
+    digitalWrite(ledPin, state);
+    delay(runtime*1000);
+    state = LOW;
+    digitalWrite(motorPin, state);
+    digitalWrite(ledPin, state);
+    delay(pentime*1000);
+  }
+  else
+  {
+    state = LOW;
+  }
+
+digitalWrite(motorPin, state);
+digitalWrite(ledPin, state);
+
+
+if (digitalRead(buttonPin) == LOW)
+  {
+    state = HIGH;
+    digitalWrite(motorPin, state);
+    digitalWrite(ledPin, state);
+  }
+}
