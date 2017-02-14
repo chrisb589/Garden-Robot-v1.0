@@ -11,6 +11,6 @@ First attempt at a self-watering indoor garden system powered by an Arduino boar
 
 ## Read-out / display / data analysis
 ### Figure out how to use Processing Language
-#### From Arduino
-- Got the serial monitor reading only humidity (commented out the temperature / dewpoint readings coming from the sensor)
-#### Processing
+- From Arduino
+  - Got the serial monitor reading only humidity (commented out the temperature / dewpoint readings coming from the sensor)
+- Processing
